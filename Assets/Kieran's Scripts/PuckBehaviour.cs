@@ -2,22 +2,41 @@ using UnityEngine;
 
 public class PuckBehaviour : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("Attachment Settings")]
+    public float attachDistance = 1.0f;
+    public float attachHeight = 0.1f;
+
+    private Transform playerTransform;
+    private Rigidbody rb;
+    private bool isAttached = false;
+
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        /* Set up a magnet for puck that connects to tagged player
-         * Attaches right in front of the player for now, will move later whe nstick gets added
-         * 
-         * if collidor == player (stick object ?) 
-         * 
-         * 
-         * 
-         */
+        if (isAttached && playerTransform  != null)
+        {
+            Vector3 targetPosition = playerTransform.position + playerTransform.forward * attachDistance;
+
+            targetPosition.y = attachHeight;
+            transform.position = targetPosition;
+        }
     }
+
+    public void AttachToPlayer(Transform player)
+    {
+        isAttached = true;
+        playerTransform = player;
+        rb.isKinematic = true;
+    }
+
+    // Shoot Mechanic
+    //public void DetachFromPlayer(Vector3 shootDirection, float force)
+    //{
+    //  set up later
+    //}
 }

@@ -20,8 +20,6 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] CharacterController controller;
 
 
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -86,6 +84,18 @@ public class PlayerControler : MonoBehaviour
         if (context.canceled)
         {
             isSprintHeld = false;
+        }
+    }
+
+    public void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.CompareTag("Puck"))
+        {
+            PuckBehaviour puck = hit.gameObject.GetComponent<PuckBehaviour>();
+            if (puck != null)
+            {
+                puck.AttachToPlayer(transform);
+            }
         }
     }
 }
