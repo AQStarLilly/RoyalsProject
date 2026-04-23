@@ -7,6 +7,9 @@ public class PlayerControler : MonoBehaviour
     float gravity = -9.15f;
     [SerializeField] Vector2 playerMovementInput = new Vector2 (0, 0);
     [SerializeField] float speed;
+    float maxSpeed = 15f;
+    float minSpeed = 5f;
+    bool isHeld = false;
     Vector3 movement;
 
     [SerializeField] CharacterController controller;
@@ -23,6 +26,14 @@ public class PlayerControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isHeld)
+        {
+            speed = Mathf.MoveTowards(speed, minSpeed, 2f * Time.deltaTime);
+        }
+        else if (isHeld)
+        {
+            speed = Mathf.MoveTowards(speed, maxSpeed, 2f * Time.deltaTime);
+        }
         controller.Move(movement * Time.deltaTime * speed);
     }
 
@@ -31,5 +42,18 @@ public class PlayerControler : MonoBehaviour
         playerMovementInput = context.action.ReadValue<Vector2>();
         movement = new(playerMovementInput.x,0f,playerMovementInput.y);
         
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            isHeld = true;
+        }
+        Debug.Log(context.phase);
+        if (context.canceled)
+        {
+            isHeld = false;
+        }
     }
 }
