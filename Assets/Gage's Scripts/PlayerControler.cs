@@ -9,8 +9,13 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] float speed;
     float maxSpeed = 15f;
     float minSpeed = 5f;
-    bool isHeld = false;
+    [SerializeField] float currentTime;
+    bool timerActive = false;
+    bool isSprintHeld = false;
+    bool isMoveHeld = false;
     Vector3 movement;
+    
+    [SerializeField] Vector3 slideMovement;
 
     [SerializeField] CharacterController controller;
 
@@ -21,19 +26,34 @@ public class PlayerControler : MonoBehaviour
     void Start()
     {
         controller = gameObject.GetComponent<CharacterController>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isHeld)
+        if (!isSprintHeld)
         {
             speed = Mathf.MoveTowards(speed, minSpeed, 2f * Time.deltaTime);
         }
-        else if (isHeld)
+        else if (isSprintHeld)
         {
             speed = Mathf.MoveTowards(speed, maxSpeed, 2f * Time.deltaTime);
         }
+        if(timerActive)
+        {
+            currentTime -= Time.deltaTime;
+            controller.Move(slideMovement * Time.deltaTime * speed);
+            if (currentTime <= 0f)
+            {
+                slideMovement = new(0, 0, 0);
+                timerActive = false;
+                currentTime = 3f;
+
+            }
+        }
+
+        
         controller.Move(movement * Time.deltaTime * speed);
     }
 
@@ -41,19 +61,31 @@ public class PlayerControler : MonoBehaviour
     {
         playerMovementInput = context.action.ReadValue<Vector2>();
         movement = new(playerMovementInput.x,0f,playerMovementInput.y);
+        if(playerMovementInput.x != 0f || playerMovementInput.y != 0f)
+        {
+            slideMovement.x = playerMovementInput.x;
+            slideMovement.z = playerMovementInput.y;
+        }
         
+        if (context.canceled)
+        {
+            
+            timerActive = true;
+        }
+        
+
     }
 
     public void OnSprint(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            isHeld = true;
+            isSprintHeld = true;
         }
         Debug.Log(context.phase);
         if (context.canceled)
         {
-            isHeld = false;
+            isSprintHeld = false;
         }
     }
 }
