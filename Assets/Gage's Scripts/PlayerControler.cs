@@ -87,6 +87,7 @@ public class PlayerControler : MonoBehaviour
         }
     }
 
+    // Player interaction with puck
     public void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.CompareTag("Puck"))
