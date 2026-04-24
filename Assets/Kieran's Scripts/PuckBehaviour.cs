@@ -29,14 +29,27 @@ public class PuckBehaviour : MonoBehaviour
 
     public void AttachToPlayer(Transform player)
     {
+        if (isAttached) return;
+
         isAttached = true;
         playerTransform = player;
         rb.isKinematic = true;
     }
 
     // Shoot Mechanic
-    //public void DetachFromPlayer(Vector3 shootDirection, float force)
-    //{
-    //  set up later
-    //}
+    public void DetachFromPlayer(Vector3 shootDirection, float force)
+    {
+        isAttached = false;
+        playerTransform = null;
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezePositionY 
+            | RigidbodyConstraints.FreezeRotationX 
+            | RigidbodyConstraints.FreezeRotationZ;
+        rb.AddForce(shootDirection * force, ForceMode.Impulse);
+    }
+
+    public bool IsAttached()
+    {
+        return isAttached;
+    }
 }

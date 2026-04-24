@@ -240,7 +240,7 @@ Rigidbody:
   m_GameObject: {fileID: 155204551}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -696,7 +696,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMovementInput: {x: 0, y: 0}
   speed: 5
+  slideSpeed: 0.5
+  currentTime: 1
+  slideMovement: {x: 0, y: 0, z: 0}
   controller: {fileID: 0}
+  shootForce: 15
 --- !u!143 &670608045
 CharacterController:
   m_ObjectHideFlags: 0

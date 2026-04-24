@@ -23,11 +23,23 @@ public class PlayerControler : MonoBehaviour
     [SerializeField] CharacterController controller;
 
 
+    [Header("Shooting")]
+    public float shootForce = 15f;
+
+    private PuckBehaviour puck;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = gameObject.GetComponent<CharacterController>();
-        
+
+        // Puck reference
+        GameObject puckObject = GameObject.FindGameObjectWithTag("Puck");
+        if (puckObject != null)
+        {
+            puck = puckObject.GetComponent<PuckBehaviour>();
+        }
     }
 
     // Update is called once per frame
@@ -57,6 +69,13 @@ public class PlayerControler : MonoBehaviour
         }
         
         controller.Move(movement * Time.deltaTime * speed);
+
+
+        // Shoot
+        if (Input.GetMouseButtonDown(0))
+        {
+            TryShoot();
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -88,6 +107,26 @@ public class PlayerControler : MonoBehaviour
         if (context.canceled)
         {
             isSprintHeld = false;
+        }
+    }
+
+    // Shooting method
+    private void TryShoot()
+    {
+        if (puck == null || !puck.IsAttached()) return; // can only shoot while holding puck
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+        if (groundPlane.Raycast(ray, out float distance))
+        {
+            Vector3 clickWorldPosition = ray.GetPoint(distance);
+
+            Vector3 shootDirection = (clickWorldPosition - puck.transform.position);
+            shootDirection.y = 0f;
+            shootDirection.Normalize();
+
+            puck.DetachFromPlayer(shootDirection, shootForce);
         }
     }
 
