@@ -7,6 +7,7 @@ public class PlayerControler : MonoBehaviour
     float gravity = -9.15f;
     [SerializeField] Vector2 playerMovementInput = new Vector2 (0, 0);
     [SerializeField] float speed;
+    [SerializeField] float slideSpeed = 0.5f;
     float maxSpeed = 15f;
     float minSpeed = 5f;
     [SerializeField] float currentTime;
@@ -14,6 +15,8 @@ public class PlayerControler : MonoBehaviour
     bool isSprintHeld = false;
     bool isMoveHeld = false;
     Vector3 movement;
+
+    
     
     [SerializeField] Vector3 slideMovement;
 
@@ -38,19 +41,20 @@ public class PlayerControler : MonoBehaviour
         {
             speed = Mathf.MoveTowards(speed, maxSpeed, 2f * Time.deltaTime);
         }
-        if(timerActive)
+        
+        if (timerActive)
         {
-            currentTime -= Time.deltaTime;
-            controller.Move(slideMovement * Time.deltaTime * speed);
-            if (currentTime <= 0f)
-            {
-                slideMovement = new(0, 0, 0);
-                timerActive = false;
-                currentTime = 3f;
+            
+            slideSpeed = Mathf.MoveTowards(slideSpeed, 1, 0.2f * Time.deltaTime);
 
-            }
+                if(slideSpeed >= 1)
+                {
+                    timerActive = false;
+                    slideMovement = new(0, 0, 0);
+                }
+
+            movement = Vector3.Lerp(movement, new Vector3(slideMovement.x, 0f, slideMovement.z), slideSpeed);
         }
-
         
         controller.Move(movement * Time.deltaTime * speed);
     }
@@ -58,19 +62,19 @@ public class PlayerControler : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         playerMovementInput = context.action.ReadValue<Vector2>();
-        movement = new(playerMovementInput.x,0f,playerMovementInput.y);
+        movement = Vector3.Lerp(movement, new Vector3(playerMovementInput.x, 0f, playerMovementInput.y), slideSpeed);
+        slideSpeed = 0.5f;
+        
         if(playerMovementInput.x != 0f || playerMovementInput.y != 0f)
         {
             slideMovement.x = playerMovementInput.x;
             slideMovement.z = playerMovementInput.y;
         }
-        
-        if (context.canceled)
+
+        if(context.canceled)
         {
-            
             timerActive = true;
         }
-        
 
     }
 
