@@ -6,6 +6,8 @@ public class PlayerControler : MonoBehaviour
 {
     float gravity = -9.15f;
     [SerializeField] Vector2 playerMovementInput = new Vector2 (0, 0);
+    float moveRotation = 0;
+    
     [SerializeField] float speed;
     [SerializeField] float slideSpeed = 0.5f;
     float maxSpeed = 15f;
@@ -68,6 +70,8 @@ public class PlayerControler : MonoBehaviour
             movement = Vector3.Lerp(movement, new Vector3(slideMovement.x, 0f, slideMovement.z), slideSpeed);
         }
         
+        movement.y = gravity;
+        
         controller.Move(movement * Time.deltaTime * speed);
 
 
@@ -76,6 +80,15 @@ public class PlayerControler : MonoBehaviour
         {
             TryShoot();
         }
+
+        // Rotation
+        
+        if (playerMovementInput.sqrMagnitude == 0) return;
+        float rotation = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
+        moveRotation = Mathf.MoveTowards(moveRotation, rotation, 1f );
+
+
+        transform.rotation = Quaternion.Euler(0f, moveRotation, 0f);
     }
 
     public void OnMove(InputAction.CallbackContext context)

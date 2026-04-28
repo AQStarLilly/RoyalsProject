@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class GoalScript : MonoBehaviour
 {
@@ -26,8 +27,17 @@ public class GoalScript : MonoBehaviour
             currentScore += 1;
 
             currentScoreText.text = currentScore.ToString();
+            if(currentScore >= 5)
+            {
+                currentScoreText.text = " ";
+            }
         }
         
 
+    }
+    public void OnResetTest(InputAction.CallbackContext context)
+    {
+        currentScore = 0;
+        currentScoreText.text = currentScore.ToString();
     }
 }
