@@ -87,6 +87,7 @@ public class PlayerControler : MonoBehaviour
         float rotation = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
 
         moveRotation = Mathf.MoveTowards(moveRotation, rotation, 1f );
+
         if (playerMovementInput.sqrMagnitude == 0) return;
 
         transform.rotation = Quaternion.Euler(0f, moveRotation, 0f);
