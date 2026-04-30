@@ -75,7 +75,10 @@ public class GameManager : MonoBehaviour
         puckTransform.position = puckStartPosition;
 
         // Reset players
+        CharacterController charcon = player1Transform.GetComponent<CharacterController>();
+        charcon.enabled = false;
         player1Transform.position = player1StartPosition;
+        charcon.enabled = true;
     }
 
     public void ResetScores()
