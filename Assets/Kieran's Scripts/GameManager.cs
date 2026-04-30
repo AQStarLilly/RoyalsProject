@@ -4,6 +4,8 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+    private PlayerControler playerControler;
+
     [Header("Scores")]
     public int team1Score = 0;
     public int team2Score = 0;
@@ -29,6 +31,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        playerControler = player1Transform.GetComponent<PlayerControler>();
+
+
         puckStartPosition = puckTransform.position;
         player1StartPosition = player1Transform.position;
 
@@ -68,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetPositions()
     {
-        // Reset puck : detach first if it's being carried
+        // Reset puck 
         puckBehaviour.ForceDetach();
         puckRigidbody.linearVelocity = Vector3.zero;
         puckRigidbody.angularVelocity = Vector3.zero;
@@ -79,6 +84,8 @@ public class GameManager : MonoBehaviour
         charcon.enabled = false;
         player1Transform.position = player1StartPosition;
         charcon.enabled = true;
+
+        playerControler.ResetMovement();
     }
 
     public void ResetScores()

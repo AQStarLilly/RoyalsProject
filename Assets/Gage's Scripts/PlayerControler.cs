@@ -157,4 +157,13 @@ public class PlayerControler : MonoBehaviour
             }
         }
     }
+
+    public void ResetMovement()
+    {
+        movement = Vector3.zero;
+        slideMovement = Vector3.zero;
+        playerMovementInput = Vector2.zero;
+        timerActive = false;
+        slideSpeed = 0.5f;
+    }
 }
