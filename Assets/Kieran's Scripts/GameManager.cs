@@ -17,6 +17,16 @@ public class GameManager : MonoBehaviour
     public TMP_Text scoredBannerText;
     public float bannerDuration = 2f;
 
+    [Header("Team Names")]
+    public string team1Name = "Amherst Royals";
+    public string team2Name = "Opposing Team";
+
+    [Header("Win Cons")]
+    public int scoreToWin = 5;
+    public GameObject winBannerObject;
+    public TMP_Text winBannerText;
+    public float winBannerDuration = 3f;
+
     //Copy p1 code for later players/bots
     [Header("Reset Positions")]
     public Transform puckTransform;
@@ -49,25 +59,34 @@ public class GameManager : MonoBehaviour
         {
             team1Score++;
             team1ScoreText.text = team1Score.ToString();
-            scoredBannerText.text = "Amherst Royals Scored!";
+            scoredBannerText.text = team1Name + " Scored!";
         }
         else
         {
             team2Score++;
             team2ScoreText.text = team2Score.ToString();
-            scoredBannerText.text = "Opposing Team Scored!";
+            scoredBannerText.text = team2Name + " Scored!";
         }
 
-        StartCoroutine(ShowBannerThenReset());    
+        StartCoroutine(ShowBannerThenReset(teamNumber));    
     }
 
-    private IEnumerator ShowBannerThenReset()
+    private IEnumerator ShowBannerThenReset(int teamNumber)
     {
         scoredBannerObject.SetActive(true);
-
         yield return new WaitForSeconds(bannerDuration);
-
         scoredBannerObject.SetActive(false);
+
+        if (team1Score >= scoreToWin || team2Score >= scoreToWin)
+        {
+            winBannerText.text = (teamNumber == 1 ? team1Name : team2Name) + " Win!";
+            winBannerObject.SetActive(true);
+            yield return new WaitForSeconds(winBannerDuration);
+            winBannerObject.SetActive(false);
+
+            ResetScores();
+        }
+
         ResetPositions();
     }
 
