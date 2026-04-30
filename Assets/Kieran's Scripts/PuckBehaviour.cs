@@ -52,4 +52,11 @@ public class PuckBehaviour : MonoBehaviour
     {
         return isAttached;
     }
+
+    public void ForceDetach()
+    {
+        isAttached = false;
+        playerTransform = null;
+        rb.isKinematic = false;
+    }
 }
