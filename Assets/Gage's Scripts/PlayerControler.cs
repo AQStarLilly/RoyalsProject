@@ -7,6 +7,7 @@ public class PlayerControler : MonoBehaviour
     float gravity = -9.15f;
     [SerializeField] Vector2 playerMovementInput = new Vector2 (0, 0);
     float moveRotation = 0;
+    float currentVelocity;
     
     [SerializeField] float speed;
     [SerializeField] float slideSpeed = 0.5f;
@@ -86,7 +87,7 @@ public class PlayerControler : MonoBehaviour
         
         float rotation = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
 
-        moveRotation = Mathf.MoveTowards(moveRotation, rotation, 1f );
+        moveRotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, rotation, ref currentVelocity, 0.05f );
 
         if (playerMovementInput.sqrMagnitude == 0) return;
 
