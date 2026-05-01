@@ -61,12 +61,15 @@ public class PlayerControler : MonoBehaviour
         {
             
             slideSpeed = Mathf.MoveTowards(slideSpeed, 1, 0.2f * Time.deltaTime);
+            slideMovement.z = Mathf.MoveTowards(slideMovement.z, 0, 0.2f * Time.deltaTime);
+            slideMovement.x = Mathf.MoveTowards(slideMovement.x, 0, 0.2f * Time.deltaTime);
 
-                if(slideSpeed >= 1)
-                {
-                    timerActive = false;
-                    slideMovement = new(0, 0, 0);
-                }
+            if(slideMovement.x == 0 && slideMovement.z == 0)
+            {
+                timerActive = false;
+                
+
+            }
 
             movement = Vector3.Lerp(movement, new Vector3(slideMovement.x, 0f, slideMovement.z), slideSpeed);
         }
@@ -97,7 +100,7 @@ public class PlayerControler : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         playerMovementInput = context.action.ReadValue<Vector2>();
-        movement = Vector3.Lerp(movement, new Vector3(playerMovementInput.x, 0f, playerMovementInput.y), slideSpeed);
+        movement = Vector3.Lerp(movement, new Vector3(playerMovementInput.x, 0f, playerMovementInput.y), speed);
         slideSpeed = 0.5f;
         
         if(playerMovementInput.x != 0f || playerMovementInput.y != 0f)
