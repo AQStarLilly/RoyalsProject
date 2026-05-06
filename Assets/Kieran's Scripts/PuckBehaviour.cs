@@ -10,6 +10,9 @@ public class PuckBehaviour : MonoBehaviour
     private Rigidbody rb;
     private bool isAttached = false;
 
+    private bool isAttachedToCPU = false;
+    private Transform cpuTransform;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -22,6 +25,13 @@ public class PuckBehaviour : MonoBehaviour
         {
             Vector3 targetPosition = playerTransform.position + playerTransform.forward * attachDistance;
 
+            targetPosition.y = attachHeight;
+            transform.position = targetPosition;
+        }
+        else if (isAttachedToCPU && cpuTransform != null)
+        {
+            Vector3 targetPosition = cpuTransform.position
+                + cpuTransform.forward * attachDistance;
             targetPosition.y = attachHeight;
             transform.position = targetPosition;
         }
@@ -43,8 +53,31 @@ public class PuckBehaviour : MonoBehaviour
         playerTransform = null;
         rb.isKinematic = false;
         rb.constraints = RigidbodyConstraints.FreezePositionY 
-            | RigidbodyConstraints.FreezeRotationX 
-            | RigidbodyConstraints.FreezeRotationZ;
+                       | RigidbodyConstraints.FreezeRotationX 
+                       | RigidbodyConstraints.FreezeRotationZ;
+        rb.AddForce(shootDirection * force, ForceMode.Impulse);
+    }
+
+    public void AttachToCPU(Transform cpu)
+    {
+        if (isAttached || isAttachedToCPU) return;
+
+        isAttachedToCPU = true;
+        cpuTransform = cpu;
+        rb.isKinematic = true;
+    }
+
+    public bool IsAttachedToCPU() => isAttachedToCPU;
+
+    public void DetachFromCPU(Vector3 shootDirection, float force)
+    {
+        isAttachedToCPU = false;
+        cpuTransform = null;
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezePositionY
+                       | RigidbodyConstraints.FreezeRotationX
+                       | RigidbodyConstraints.FreezeRotationZ;
+
         rb.AddForce(shootDirection * force, ForceMode.Impulse);
     }
 
@@ -56,7 +89,9 @@ public class PuckBehaviour : MonoBehaviour
     public void ForceDetach()
     {
         isAttached = false;
+        isAttachedToCPU = false;
         playerTransform = null;
+        cpuTransform = null;   
         rb.isKinematic = false;
     }
 }
