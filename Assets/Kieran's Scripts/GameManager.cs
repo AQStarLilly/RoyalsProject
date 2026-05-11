@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text winBannerText;
     public float winBannerDuration = 3f;
 
-    //Copy p1 code for later players/bots
     [Header("Reset Positions")]
     public Transform puckTransform;
     public Transform player1Transform;
