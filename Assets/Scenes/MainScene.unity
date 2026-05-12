@@ -8538,10 +8538,14 @@ MonoBehaviour:
   winBannerDuration: 3
   puckTransform: {fileID: 155204555}
   player1Transform: {fileID: 670608049}
-  cpuTransform: {fileID: 1130847328}
   puckStartPosition: {x: 0, y: 0, z: 0}
   player1StartPosition: {x: 0, y: 0, z: 0}
-  cpuStartPosition: {x: 0, y: 0, z: 0}
+  allCPUs:
+  - {fileID: 1130847328}
+  - {fileID: 643134145}
+  - {fileID: 18189414}
+  - {fileID: 166897519}
+  - {fileID: 1151479474}
 --- !u!1 &2120470911
 GameObject:
   m_ObjectHideFlags: 0
