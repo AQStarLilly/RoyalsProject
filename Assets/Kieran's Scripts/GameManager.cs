@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class GameManager : MonoBehaviour
     private TournementManager tournementManager;
 
     private PlayerControler playerControler;
-    private CPUController cpuController;
 
     [Header("Scores")]
     public int team1Score = 0;
@@ -38,14 +38,15 @@ public class GameManager : MonoBehaviour
     [Header("Reset Positions")]
     public Transform puckTransform;
     public Transform player1Transform;
-    public Transform cpuTransform;
 
     public Vector3 puckStartPosition;
     public Vector3 player1StartPosition;
-    public Vector3 cpuStartPosition;
 
     private Rigidbody puckRigidbody;
     private PuckBehaviour puckBehaviour;
+
+    public List<Transform> allCPUs = new();
+    private List<Vector3> cpuStartPositions = new();
 
 
     void Start()
@@ -54,11 +55,13 @@ public class GameManager : MonoBehaviour
         tournementManager = tournementManagerObject.GetComponent<TournementManager>();
 
         playerControler = player1Transform.GetComponent<PlayerControler>();
-        cpuController = cpuTransform.GetComponent<CPUController>();
 
         puckStartPosition = puckTransform.position;
         player1StartPosition = player1Transform.position;
-        cpuStartPosition = cpuTransform.position;
+        foreach (Transform cpu in allCPUs)
+        {
+            cpuStartPositions.Add(cpu.position);
+        }          
 
         puckRigidbody = puckTransform.GetComponent<Rigidbody>();
         puckBehaviour = puckTransform.GetComponent<PuckBehaviour>();
@@ -149,14 +152,19 @@ public class GameManager : MonoBehaviour
         player1Transform.position = player1StartPosition;
         charcon.enabled = true;
 
-        CharacterController cpuCC = cpuTransform.GetComponent<CharacterController>();
-        cpuCC.enabled = false;
-        cpuTransform.position = cpuStartPosition;
-        cpuCC.enabled = true;
+        for (int i = 0; i < allCPUs.Count; i++)
+        {
+            CharacterController cpuCC = allCPUs[i].GetComponent<CharacterController>();
+            cpuCC.enabled = false;
+            allCPUs[i].position = cpuStartPositions[i];
+            cpuCC.enabled = true;
+
+            CPUController cpuCtrl = allCPUs[i].GetComponent<CPUController>();
+            if (cpuCtrl != null) cpuCtrl.ResetMovement();
+        }
 
 
         playerControler.ResetMovement();
-        cpuController.ResetMovement();
     }
 
     public void ResetScores()
