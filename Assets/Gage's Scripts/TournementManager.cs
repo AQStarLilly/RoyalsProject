@@ -14,36 +14,36 @@ public class TournementManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gameManager.team1Score >= 5)
-        {
-            DisplayVictory();
-            gameManager.ResetScores();
-            CurrentWins += 1;
-        }
-        else if(gameManager.team2Score >= 5)
-        {
-            DisplayLoss();
-            gameManager.ResetScores();
-        }
+        //if(gameManager.team1Score >= 5)
+        //{
+        //    DisplayVictory();
+        //    //gameManager.ResetScores();
+        //    CurrentWins += 1;
+        //}
+        //else if(gameManager.team2Score >= 5)
+        //{
+        //    DisplayLoss();
+        //    //gameManager.ResetScores();
+        //}
 
-        if(CurrentWins == 2)
-        {
-            DisplayChampions();
-            gameManager.ResetScores();
-        }
+        //if(CurrentWins == 2)
+        //{
+        //    DisplayChampions();
+        //    //gameManager.ResetScores();
+        //}
     }
 
     
     void DisplayChampions()
     {
-        Debug.Log("Champs");
+        //Debug.Log("Champs");
     }
     void DisplayVictory()
     {
-        Debug.Log("Winner");
+        //Debug.Log("Winner");
     }
     void DisplayLoss()
     {
-        Debug.Log("Loss");
+        //Debug.Log("Loss");
     }
 }

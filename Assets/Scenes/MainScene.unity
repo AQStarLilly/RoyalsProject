@@ -8523,8 +8523,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a98271636958f40a3b672a44a71d6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tournementManagerObject: {fileID: 28734932}
   team1Score: 0
   team2Score: 0
+  totalWins: 0
   team1ScoreText: {fileID: 36564063}
   team2ScoreText: {fileID: 695078642}
   scoredBannerObject: {fileID: 1789299614}

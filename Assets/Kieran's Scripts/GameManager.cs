@@ -4,12 +4,19 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+    // the tournment manager
+    public GameObject tournementManagerObject;
+    private TournementManager tournementManager;
+
     private PlayerControler playerControler;
     private CPUController cpuController;
 
     [Header("Scores")]
     public int team1Score = 0;
     public int team2Score = 0;
+
+    //keeps the total wins
+    public int totalWins = 0;
 
     [Header("UI")]
     public TMP_Text team1ScoreText;
@@ -43,6 +50,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // get the manager this was to see if thats why it's not working
+        tournementManager = tournementManagerObject.GetComponent<TournementManager>();
+
         playerControler = player1Transform.GetComponent<PlayerControler>();
         cpuController = cpuTransform.GetComponent<CPUController>();
 
@@ -87,6 +97,38 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(winBannerDuration);
             winBannerObject.SetActive(false);
 
+
+            //total wins and display right now it shows all messages so i need to fix it
+            //TotalWins();
+            
+            if (team2Score >= scoreToWin)
+            {
+                winBannerText.text = team1Name + " is Eelinmated";
+                winBannerObject.SetActive(true);
+                yield return new WaitForSeconds(winBannerDuration);
+                winBannerObject.SetActive(false);
+                Debug.Log("team 2 wins");
+            }
+            else if (team1Score >= scoreToWin)
+            {
+                totalWins += 1;
+                winBannerText.text = team1Name + " moves on to the next round  Wins: " + totalWins;
+                winBannerObject.SetActive(true);
+                yield return new WaitForSeconds(winBannerDuration);
+                winBannerObject.SetActive(false);
+                Debug.Log("team 1 wins");
+            }
+
+            if (totalWins == 3)
+            {
+                winBannerText.text = team1Name + " Wins the cup";
+                winBannerObject.SetActive(true);
+                yield return new WaitForSeconds(winBannerDuration);
+                winBannerObject.SetActive(false);
+                Debug.Log("next round");
+            }
+            //
+
             ResetScores();
         }
 
@@ -124,4 +166,35 @@ public class GameManager : MonoBehaviour
         team1ScoreText.text = "0";
         team2ScoreText.text = "0";
     }
+
+
+    // the code to keep track of total wins
+
+    //public void TotalWins()
+    //{
+    //    if (team2Score >= scoreToWin)
+    //    {
+    //        winBannerText.text = team1Name + " is Eelinmated";
+    //        winBannerObject.SetActive(true);
+    //        yield return new WaitForSeconds(winBannerDuration);
+    //        winBannerObject.SetActive(false);
+    //    }
+    //    else if (team1Score >= scoreToWin)
+    //    {
+    //        totalWins++;
+    //        winBannerText.text = team1Name + " moves on to the next round  Wins: " + tournementManager.CurrentWins;
+    //        winBannerObject.SetActive(true);
+    //        yield return new WaitForSeconds(winBannerDuration);
+    //        winBannerObject.SetActive(false);
+    //    }
+
+    //    if(totalWins == 3)
+    //    {
+    //        winBannerText.text = team1Name + " Wins the cup";
+    //        winBannerObject.SetActive(true);
+    //        yield return new WaitForSeconds(winBannerDuration);
+    //        winBannerObject.SetActive(false);
+    //    }
+        
+    //}
 }
