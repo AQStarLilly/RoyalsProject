@@ -276,8 +276,11 @@ MonoBehaviour:
   shootRange: 6
   shootForce: 15
   passRange: 8
-  blockCheckRadius: 0.5
-  defendOffset: 2
+  blockCheckRadius: 5
+  defendOffset: 4
+  seperationRadius: 2
+  seperationStrength: 2
+  teamIndex: 1
 --- !u!143 &18189410
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1178,8 +1181,11 @@ MonoBehaviour:
   shootRange: 6
   shootForce: 15
   passRange: 8
-  blockCheckRadius: 0.5
-  defendOffset: 2
+  blockCheckRadius: 5
+  defendOffset: 4
+  seperationRadius: 2
+  seperationStrength: 2
+  teamIndex: 1
 --- !u!143 &166897515
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3025,8 +3031,11 @@ MonoBehaviour:
   shootRange: 6
   shootForce: 15
   passRange: 8
-  blockCheckRadius: 0.5
-  defendOffset: 2
+  blockCheckRadius: 5
+  defendOffset: 4
+  seperationRadius: 2
+  seperationStrength: 2
+  teamIndex: 3
 --- !u!143 &643134141
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4860,8 +4869,11 @@ MonoBehaviour:
   shootRange: 6
   shootForce: 15
   passRange: 8
-  blockCheckRadius: 0.5
-  defendOffset: 2
+  blockCheckRadius: 5
+  defendOffset: 4
+  seperationRadius: 2
+  seperationStrength: 2
+  teamIndex: 2
 --- !u!1 &1151479468
 GameObject:
   m_ObjectHideFlags: 0
@@ -4911,8 +4923,11 @@ MonoBehaviour:
   shootRange: 6
   shootForce: 15
   passRange: 8
-  blockCheckRadius: 0.5
-  defendOffset: 2
+  blockCheckRadius: 5
+  defendOffset: 4
+  seperationRadius: 2
+  seperationStrength: 2
+  teamIndex: 3
 --- !u!143 &1151479470
 CharacterController:
   m_ObjectHideFlags: 0

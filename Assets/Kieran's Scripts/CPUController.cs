@@ -30,6 +30,13 @@ public class CPUController : MonoBehaviour
     [Header("Defending")]
     public float defendOffset = 2f;
 
+    [Header("Seperation")]
+    public float seperationRadius = 2f;
+    public float seperationStrength = 2f;
+
+    [Header("Positioning")]
+    public int teamIndex = 0;
+
     private CharacterController controller;
     private PuckBehaviour puckBehaviour;
     private float gravity = -9.15f;
@@ -192,18 +199,42 @@ public class CPUController : MonoBehaviour
         // Offset to the side so two teammates aren't stacked together
         Vector3 sideOffset = Vector3.Cross(toGoal, Vector3.up) * 3f;
 
-        // Alternate left/right based on which teammate index this is
-        int index = teammates.IndexOf(transform) % 2 == 0 ? 1 : -1;
+        int myIndex = teamIndex;
+        float[] offsets = { -1f, 0f, 1f };
+        float side = offsets[Mathf.Clamp(myIndex, 0, offsets.Length - 1)];
 
-        return puckTransform.position + toGoal * 3f + sideOffset * index;
+        return puckTransform.position + toGoal * 3f + sideOffset * side;
+    }
+
+    private Vector3 GetSeperationForce()
+    {
+        Vector3 seperationForce = Vector3.zero;
+
+        foreach (Transform teammate in teammates)
+        {
+            if (teammate == null) continue;
+
+            float dist = Vector3.Distance(transform.position, teammate.position);
+
+            if (dist < seperationRadius && dist > 0.01f)
+            {
+                Vector3 pushDirection = (transform.position - teammate.position).normalized;
+                seperationForce += pushDirection * (seperationRadius - dist);
+            }
+        }
+
+        return seperationForce;
     }
 
     // --- Movement ---
-
     private void MoveToward(Vector3 targetPosition)
     {
         Vector3 direction = (targetPosition - transform.position);
         direction.y = 0f;
+
+        Vector3 seperation = GetSeperationForce();
+        Vector3 blendedDirection = (direction.normalized * moveSpeed) + (seperation * seperationStrength);
+        blendedDirection.y = 0f;
 
         verticalVelocity += gravity * Time.deltaTime;
         Vector3 movement = direction.normalized * moveSpeed;
@@ -211,9 +242,9 @@ public class CPUController : MonoBehaviour
 
         controller.Move(movement * Time.deltaTime);
 
-        if (direction.sqrMagnitude > 0.1f)
+        if (blendedDirection.sqrMagnitude > 0.1f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            Quaternion targetRotation = Quaternion.LookRotation(blendedDirection);
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
