@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
     public List<Transform> allCPUs = new();
     private List<Vector3> cpuStartPositions = new();
 
+    private bool scoringLocked = false;
+
 
     void Start()
     {
@@ -71,6 +73,9 @@ public class GameManager : MonoBehaviour
 
     public void TeamScored(int teamNumber)
     {
+        if (scoringLocked) return;
+        scoringLocked = true;
+
         if (teamNumber == 1)
         {
             team1Score++;
@@ -165,6 +170,7 @@ public class GameManager : MonoBehaviour
 
 
         playerControler.ResetMovement();
+        scoringLocked = false;
     }
 
     public void ResetScores()
