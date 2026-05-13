@@ -29,6 +29,7 @@ public class CPUController : MonoBehaviour
 
     [Header("Defending")]
     public float defendOffset = 2f;
+    public float goalProtectDistance = 6f;
 
     [Header("Seperation")]
     public float seperationRadius = 2f;
@@ -107,12 +108,8 @@ public class CPUController : MonoBehaviour
                 Transform puckCarrier = GetOpponentWithPuck();
                 if (puckCarrier != null)
                 {
-                    Vector3 interceptPoint = Vector3.Lerp(
-                        puckCarrier.position,
-                        ownGoal.position,
-                        defendOffset
-                    );
-                    MoveToward(interceptPoint);
+                    Vector3 defendPosition = GetDefendPosition(puckCarrier);
+                    MoveToward(defendPosition);
                 }
                 break;
 
@@ -224,6 +221,30 @@ public class CPUController : MonoBehaviour
         }
 
         return seperationForce;
+    }
+
+    private Vector3 GetDefendPosition(Transform threat)
+    {
+        float distThreatToGoal = Vector3.Distance(threat.position, ownGoal.position);
+
+        Vector3 toGoal = (ownGoal.position - threat.position).normalized;
+        Vector3 lateral = Vector3.Cross(toGoal, Vector3.up);
+
+        float[] slots = { -2.5f, 0f, 2.5f };
+        float slot = slots[Mathf.Clamp(teamIndex, 0, slots.Length - 1)];
+        Vector3 lateralOffset = lateral * slot;
+
+        if (distThreatToGoal > goalProtectDistance)
+        {
+            // Threat is far out — pressure them directly with lateral spread
+            return threat.position + lateralOffset;
+        }
+        else
+        {
+            // Threat is close to goal — drop back and form a defensive wall
+            Vector3 baseIntercept = Vector3.Lerp(threat.position, ownGoal.position, defendOffset);
+            return baseIntercept + lateralOffset;
+        }
     }
 
     // --- Movement ---
